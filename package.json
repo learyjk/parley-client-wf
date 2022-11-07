@@ -1,0 +1,28 @@
+{
+  "name": "parley-client-wf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "serve",
+    "build": "esbuild index.ts --bundle --sourcemap --outdir=dist",
+    "format": "prettier index.ts -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/learyjk/parley-client-wf.git"
+  },
+  "author": "Keegan Leary",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/learyjk/parley-client-wf/issues"
+  },
+  "homepage": "https://github.com/learyjk/parley-client-wf#readme",
+  "devDependencies": {
+    "esbuild": "^0.15.13",
+    "prettier": "^2.7.1",
+    "serve": "^14.0.1",
+    "typescript": "^4.8.4"
+  }
+}
