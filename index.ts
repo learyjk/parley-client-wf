@@ -24,11 +24,8 @@ interface CarrierData {
 
 
 const init = async () => {
-    console.log("init called");
-
-    //const targets = buildTargets()
+    // select UI elements
     const targets: NodeList = document.querySelectorAll('[parley-target]')
-    console.log({ targets })
     const loader = document.querySelector<HTMLDivElement>('[data-parley="loader"]')
     if (!loader) return
 
@@ -36,8 +33,8 @@ const init = async () => {
     const form = document.querySelector("form");
     if (!form) return;
 
+    // define data fetching function
     const getData = async (num): Promise<CarrierData | null> => {
-        console.log('getData for num:', num)
         try {
             const response = await fetch(
                 `https://parley-api-2gajsirgta-uc.a.run.app/${num}`
@@ -54,25 +51,24 @@ const init = async () => {
         }
     }
 
+    // UI updating function
     const updateUI = (data: CarrierData) => {
         targets.forEach((target) => {
             let val = data[String((<Element>target).getAttribute('parley-target'))]
             if (typeof val === "string") {
-                console.log({ val })
                 val = "false" ? "NO" : "YES"
             }
             target.textContent = val
         })
     }
 
+    // function to run on form submit
     const formSubmit = async (event) => {
-        console.log("form submit");
         event.preventDefault();
         const dotNumber = form.querySelector<HTMLInputElement>('[parley-form="dot-number"]')?.value
         // call getData for DOT Number submitted through form
         loader.classList.add('is-visible')
         const data = await getData(dotNumber)
-        console.log({ data })
         // Update UI
         if (!data) {
             console.log('error getting carrier data!')
@@ -84,10 +80,7 @@ const init = async () => {
         }, 1000)
 
     };
-
     form.addEventListener("submit", formSubmit);
-
-
 };
 
 document.addEventListener("DOMContentLoaded", init);
