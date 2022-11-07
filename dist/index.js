@@ -1,9 +1,7 @@
 (() => {
   // index.ts
   var init = async () => {
-    console.log("init called");
     const targets = document.querySelectorAll("[parley-target]");
-    console.log({ targets });
     const loader = document.querySelector('[data-parley="loader"]');
     if (!loader)
       return;
@@ -11,7 +9,6 @@
     if (!form)
       return;
     const getData = async (num) => {
-      console.log("getData for num:", num);
       try {
         const response = await fetch(
           `https://parley-api-2gajsirgta-uc.a.run.app/${num}`
@@ -31,19 +28,16 @@
       targets.forEach((target) => {
         let val = data[String(target.getAttribute("parley-target"))];
         if (typeof val === "string") {
-          console.log({ val });
           val = "false" ? "NO" : "YES";
         }
         target.textContent = val;
       });
     };
     const formSubmit = async (event) => {
-      console.log("form submit");
       event.preventDefault();
       const dotNumber = form.querySelector('[parley-form="dot-number"]')?.value;
       loader.classList.add("is-visible");
       const data = await getData(dotNumber);
-      console.log({ data });
       if (!data) {
         console.log("error getting carrier data!");
       } else {
