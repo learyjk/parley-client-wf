@@ -4,6 +4,9 @@
     console.log("init called");
     const targets = document.querySelectorAll("[parley-target]");
     console.log({ targets });
+    const loader = document.querySelector('[data-parley="loader"]');
+    if (!loader)
+      return;
     const form = document.querySelector("form");
     if (!form)
       return;
@@ -26,13 +29,19 @@
     };
     const updateUI = (data) => {
       targets.forEach((target) => {
-        target.textContent = data[String(target.getAttribute("parley-target"))];
+        let val = data[String(target.getAttribute("parley-target"))];
+        if (typeof val === "string") {
+          console.log({ val });
+          val = "false" ? "NO" : "YES";
+        }
+        target.textContent = val;
       });
     };
     const formSubmit = async (event) => {
       console.log("form submit");
       event.preventDefault();
       const dotNumber = form.querySelector('[parley-form="dot-number"]')?.value;
+      loader.classList.add("is-visible");
       const data = await getData(dotNumber);
       console.log({ data });
       if (!data) {
@@ -40,6 +49,9 @@
       } else {
         updateUI(data);
       }
+      setTimeout(() => {
+        loader.classList.remove("is-visible");
+      }, 1e3);
     };
     form.addEventListener("submit", formSubmit);
   };

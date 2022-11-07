@@ -22,16 +22,6 @@ interface CarrierData {
     VEH_MAINT_MEASURE: number;
 }
 
-const buildTargets = () => {
-    const targets = document.querySelectorAll('[parley-target]')
-    const result = new Map()
-
-    targets.forEach((target) => {
-        result.set(target.getAttribute('parley-target'), target.textContent)
-    })
-
-    return result;
-}
 
 const init = async () => {
     console.log("init called");
@@ -39,10 +29,13 @@ const init = async () => {
     //const targets = buildTargets()
     const targets: NodeList = document.querySelectorAll('[parley-target]')
     console.log({ targets })
+    const loader = document.querySelector<HTMLDivElement>('[data-parley="loader"]')
+    if (!loader) return
 
     // listen for form submission
     const form = document.querySelector("form");
     if (!form) return;
+
     const getData = async (num): Promise<CarrierData | null> => {
         console.log('getData for num:', num)
         try {
@@ -62,9 +55,13 @@ const init = async () => {
     }
 
     const updateUI = (data: CarrierData) => {
-
         targets.forEach((target) => {
-            target.textContent = data[String((<Element>target).getAttribute('parley-target'))]
+            let val = data[String((<Element>target).getAttribute('parley-target'))]
+            if (typeof val === "string") {
+                console.log({ val })
+                val = "false" ? "NO" : "YES"
+            }
+            target.textContent = val
         })
     }
 
@@ -73,6 +70,7 @@ const init = async () => {
         event.preventDefault();
         const dotNumber = form.querySelector<HTMLInputElement>('[parley-form="dot-number"]')?.value
         // call getData for DOT Number submitted through form
+        loader.classList.add('is-visible')
         const data = await getData(dotNumber)
         console.log({ data })
         // Update UI
@@ -81,6 +79,10 @@ const init = async () => {
         } else {
             updateUI(data)
         }
+        setTimeout(() => {
+            loader.classList.remove('is-visible')
+        }, 1000)
+
     };
 
     form.addEventListener("submit", formSubmit);
